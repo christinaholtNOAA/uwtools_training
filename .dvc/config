@@ -1,4 +1,5 @@
 [core]
     remote = hera
+    site_cache_dir = ./cache
 ['remote "hera"']
     url = /scratch3/BMC/wrfruc/cholt/uw_training_prep/dvcstore/
