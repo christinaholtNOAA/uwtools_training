@@ -1,0 +1,106 @@
+user:
+  account: zrtrr
+workflow:
+  attrs:
+    realtime: false
+    scheduler: slurm
+  cycledef:
+    - attrs:
+        group: cold_start_cycle
+      spec: 202508271200 202508271200 01:00:00
+    - attrs:
+        group: prod
+      spec: 202508271300 202508271300 01:00:00
+  entities:
+    ACCOUNT: "{{ user.account }}"
+    LOGDIR: "{{ user.expt_dir}}/log"
+  log:
+    value: "{{ user.expt_dir }}/workflow.log"
+  tasks:
+    task_prepare_ics:
+      attrs:
+        cycledefs: cold_start_cycle
+      account: "&ACCOUNT;"
+      command:
+        cyclestr:
+          value: uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime 0 -c {{ user.uw_training }}/uw_configs/prepare_bcs.yaml --key-path make_ics
+      join:
+        cyclestr:
+          value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
+      nodes: "{{ make_ics.chgres_cube.execution.batchargs.nodes }}:ppn={{ make_ics.chgres_cube.execution.batchargs.tasks_per_node }}"
+      walltime: "{{ make_ics.chgres_cube.execution.batchargs.walltime }}"
+    metatask_prepare_lbcs:
+      var:
+        LEADTIME: '{% for fh in range(0, 6) %}{{ "%d " % fh }}{% endfor %}'
+      task_prepare_ics_#LEADTIME#:
+        attrs:
+          cycledefs: cold_start_cycle
+        account: "&ACCOUNT;"
+        command:
+          cyclestr:
+            value: 'uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime #LEADTIME# -c {{ user.uw_training }}/uw_configs/prepare_bcs.yaml --key-path make_lbcs'
+        join:
+          cyclestr:
+            value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
+        nodes: "{{ make_lbcs.chgres_cube.execution.batchargs.nodes }}:ppn={{ make_lbcs.chgres_cube.execution.batchargs.tasks_per_node }}"
+        walltime: "{{ make_lbcs.chgres_cube.execution.batchargs.walltime }}"
+
+    task_forecast_coldstart:
+      attrs:
+        cycledefs: cold_start_cycle
+      account: "&ACCOUNT;"
+      command:
+        cyclestr:
+          value: uw fv3 run --cycle @Y-@m-@dT@H -c {{ user.uw_training }}/uw_configs/fv3_config.yaml --key-path forecast_prod
+      join:
+        cyclestr:
+          value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
+      nodes: "{{ forecast_prod.fv3.execution.batchargs.nodes }}:ppn={{ forecast_prod.fv3.execution.batchargs.tasks_per_node }}"
+      walltime: "{{ forecast_prod.fv3.execution.batchargs.walltime }}"
+      dependency:
+        and:
+          taskdep_ics:
+            attrs:
+              task: prepare_ics
+          metataskdep_lbcs:
+            attrs:
+              metatask: prepare_lbcs
+    task_analysis:
+      attrs:
+        cycledefs: prod
+      account: "&ACCOUNT;"
+      command:
+        cyclestr:
+          value: uw gsi run --cycle @Y-@m-@dT@H -c {{ user.uw_training }}/uw_configs/gsi_uw_config.yaml --key-path analysis
+      join:
+        cyclestr:
+          value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
+      cores: !int "{{ analysis.gsi.execution.batchargs.cores }}"
+      walltime: "{{ analysis.gsi.execution.batchargs.walltime }}"
+      dependency:
+        or:
+          taskdep_forecast_coldstart:
+            attrs:
+              cycle_offset: "-01:00:00"
+              task: forecast_coldstart
+          taskdep_forecast_cycled:
+            attrs:
+              cycle_offset: "-01:00:00"
+              task: forecast_cycled
+    task_forecast_cycled:
+      attrs:
+        cycledefs: prod
+      account: "&ACCOUNT;"
+      command:
+        cyclestr:
+          value: '{{ user.uw_training }}/scripts/run_forecast.sh {{ user.uw_training }}/uw_configs/fv3_config.yaml @Y-@m-@dT@H'
+      join:
+        cyclestr:
+          value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
+      nodes: "{{ cycled_forecast.fv3.execution.batchargs.nodes }}:ppn={{ cycled_forecast.fv3.execution.batchargs.tasks_per_node }}"
+      walltime: "{{ cycled_forecast.fv3.execution.batchargs.walltime }}"
+      dependency:
+        taskdep:
+          attrs:
+            task: analysis
+
