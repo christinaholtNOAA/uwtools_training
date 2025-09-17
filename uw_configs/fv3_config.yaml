@@ -6,15 +6,17 @@ timevars:
   hh: '{{ cycle.strftime("%H") }}'
 user:
   uw_training: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training
-  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt2
+  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt4
 
   rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
   physics_suite: FV3_HRRR_gf
   cycle_int: !timedelta 1
+  account: wrfruc
 platform:
+  scheduler: slurm
   fix: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS
-  fix_am: "{{ fix }}/am"
-  fix_lam: "{{ fix }}/lam/RRFS_CONUS_13km_Lake_fracSV"
+  fix_am: "{{ platform.fix }}/am"
+  fix_lam: "{{ platform.fix }}/lam/RRFS_CONUS_13km_Lake_fracSV"
   input_data: /scratch3/BMC/wrfruc/cholt/rrfs_work/input_data
 forecast_prod:
   fv3: &fv3_config
