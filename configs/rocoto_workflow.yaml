@@ -23,7 +23,7 @@ workflow:
       account: "&ACCOUNT;"
       command:
         cyclestr:
-          value: uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime 0 -c {{ user.uw_training }}/uw_configs/prepare_bcs.yaml --key-path make_ics
+          value: uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime 0 -c {{ user.uw_training }}/configs/prepare_bcs.yaml --key-path make_ics
       join:
         cyclestr:
           value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
@@ -38,7 +38,7 @@ workflow:
         account: "&ACCOUNT;"
         command:
           cyclestr:
-            value: 'uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime #LEADTIME# -c {{ user.uw_training }}/uw_configs/prepare_bcs.yaml --key-path make_lbcs'
+            value: 'uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime #LEADTIME# -c {{ user.uw_training }}/configs/prepare_bcs.yaml --key-path make_lbcs'
         join:
           cyclestr:
             value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
@@ -51,7 +51,7 @@ workflow:
       account: "&ACCOUNT;"
       command:
         cyclestr:
-          value: uw fv3 run --cycle @Y-@m-@dT@H -c {{ user.uw_training }}/uw_configs/fv3_config.yaml --key-path forecast_prod
+          value: uw fv3 run --cycle @Y-@m-@dT@H -c {{ user.uw_training }}/configs/fv3_config.yaml --key-path forecast_prod
       join:
         cyclestr:
           value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
@@ -71,7 +71,7 @@ workflow:
       account: "&ACCOUNT;"
       command:
         cyclestr:
-          value: uw gsi run --cycle @Y-@m-@dT@H -c {{ user.uw_training }}/uw_configs/gsi_uw_config.yaml --key-path analysis
+          value: uw gsi run --cycle @Y-@m-@dT@H -c {{ user.uw_training }}/configs/gsi_uw_config.yaml --key-path analysis
       join:
         cyclestr:
           value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
@@ -93,7 +93,7 @@ workflow:
       account: "&ACCOUNT;"
       command:
         cyclestr:
-          value: '{{ user.uw_training }}/scripts/run_forecast.sh {{ user.uw_training }}/uw_configs/fv3_config.yaml @Y-@m-@dT@H'
+          value: '{{ user.uw_training }}/scripts/run_forecast.sh {{ user.uw_training }}/configs/fv3_config.yaml @Y-@m-@dT@H'
       join:
         cyclestr:
           value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'

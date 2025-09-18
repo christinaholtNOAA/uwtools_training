@@ -23,7 +23,7 @@ workflow:
       account: "&ACCOUNT;"
       command:
         cyclestr:
-          value: uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime 0 -c {{ user.uw_training }}/uw_configs/prepare_bcs.yaml --key-path make_ics
+          value: uw chgres_cube run --cycle @Y-@m-@dT@H --leadtime 0 -c {{ user.uw_training }}/configs/prepare_bcs.yaml --key-path make_ics
       join:
         cyclestr:
           value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
