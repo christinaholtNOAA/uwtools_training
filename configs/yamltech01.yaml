@@ -1,0 +1,12 @@
+math: &m
+  e: 2.718
+  pi: 3.142
+constants:
+  <<: *m
+  c: 299792458
+defaults: &d
+  color: red
+  flower: rose
+favorites:
+  <<: *d
+  color: blue

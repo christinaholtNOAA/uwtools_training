@@ -1,0 +1,4 @@
+pi: &pi 3.142
+constants:
+  e: 2.718
+  pi: *pi
