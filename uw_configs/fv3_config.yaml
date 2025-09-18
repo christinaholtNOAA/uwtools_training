@@ -6,14 +6,18 @@ timevars:
   hh: '{{ cycle.strftime("%H") }}'
 user:
   uw_training: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training
-  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt2
+  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt4
 
   rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
   physics_suite: FV3_HRRR_gf
   cycle_int: !timedelta 1
+  account: wrfruc
 platform:
-  fix_lam: "{{ user.uw_training }}/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV"
-  fix_am: "{{ user.uw_training }}/FIX_RRFS/am"
+  scheduler: slurm
+  fix: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS
+  fix_am: "{{ platform.fix }}/am"
+  fix_lam: "{{ platform.fix }}/lam/RRFS_CONUS_13km_Lake_fracSV"
+  input_data: /scratch3/BMC/wrfruc/cholt/rrfs_work/input_data
 forecast_prod:
   fv3: &fv3_config
     diag_table:
@@ -40,11 +44,11 @@ forecast_prod:
     field_table:
       base_file: "{{ user.rrfs_workflow }}/parm/field_table.{{ user.physics_suite }}"
     files_to_copy: &files_to_copy
-      INPUT/gfs_ctrl.nc: "{{ user.uw_training }}/input_data/ics/gfs_ctrl.nc"
-      INPUT/gfs_data.nc: "{{ user.uw_training }}/input_data/ics/out.atm.tile7.nc"
-      INPUT/sfc_data.nc: "{{ user.uw_training }}/input_data/ics/out.sfc.tile7.nc"
+      INPUT/gfs_ctrl.nc: "{{ user.expt_dir }}/{{ timevars.yyyymmddhh }}/ics/gfs_ctrl.nc"
+      INPUT/gfs_data.nc: "{{ user.expt_dir }}/{{ timevars.yyyymmddhh }}/ics/out.atm.tile7.nc"
+      INPUT/sfc_data.nc: "{{ user.expt_dir }}/{{ timevars.yyyymmddhh }}/ics/out.sfc.tile7.nc"
       ufs.configure: "{{ user.uw_training }}/parm/ufs.configure"
-      fd_ufs.yaml: "{{ user.uw_training }}/parm//fd_ufs.yaml"
+      fd_ufs.yaml: "{{ user.uw_training }}/parm/fd_ufs.yaml"
     files_to_link:
       INPUT/grid_spec.nc: "{{ platform.fix_lam }}/C775_mosaic.halo3.nc"
       INPUT/grid.tile7.halo4.nc: "{{ platform.fix_lam }}/C775_grid.tile7.halo4.nc"
@@ -87,7 +91,7 @@ forecast_prod:
     lateral_boundary_conditions: 
       interval_hours: 1
       offset: 0
-      path: "{{ user.uw_training }}/input_data/lbcs/{{ timevars.yyyymmddhh }}_{forecast_hour:03d}/gfs.bndy.nc"
+      path: "{{ user.expt_dir }}/{{ timevars.yyyymmddhh }}/lbcs/{{ timevars.yyyymmddhh }}_{forecast_hour:03d}/gfs.bndy.nc"
     length: 3
     model_configure:
       update_values: &model_configure
@@ -135,9 +139,9 @@ forecast_prod:
     namelist:
       base_file: "{{ user.uw_training }}/parm/input.nml"
     rundir: "{{ user.expt_dir }}/{{ timevars.yyyymmddhh }}/fcst"
-  platform:
-    scheduler: slurm
-    account: wrfruc
+  platform: &driver_platform
+    scheduler: "{{ platform.scheduler }}"
+    account: "{{ user.account }}"
 cycled_forecast:
   fv3:
     <<: *fv3_config
@@ -174,5 +178,4 @@ cycled_forecast:
         <<: *model_configure
         run_continue: true
   platform:
-    scheduler: slurm
-    account: wrfruc
+    <<: *driver_platform

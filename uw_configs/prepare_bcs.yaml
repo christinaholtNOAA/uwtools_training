@@ -1,15 +1,17 @@
 user:
-  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt2
+  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt4
   uw_training: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training
-  rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/
+  rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
 timevars:
   yyyymmddhh: '{{ cycle.strftime("%Y%m%d%H") }}'
   yyyymmdd: '{{ cycle.strftime("%Y%m%d") }}'
   hh: '{{ cycle.strftime("%H") }}'
   fff: '{{ "%03d" % (leadtime.total_seconds() / 3600) }}'
 platform:
-  fix_lam: '{{ user.uw_training }}/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV'
-  fix_am: '{{ user.uw_training }}/FIX_RRFS/am'
+  fix: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS
+  fix_am: "{{ platform.fix }}/am"
+  fix_lam: "{{ platform.fix }}/lam/RRFS_CONUS_13km_Lake_fracSV"
+  input_data: /scratch3/BMC/wrfruc/cholt/rrfs_work/input_data
 make_ics:
   # https://uwtools.readthedocs.io/en/main/sections/user_guide/yaml/components/chgres_cube.html
   chgres_cube:
@@ -34,7 +36,7 @@ make_ics:
           cycle_day: !int "{{ (cycle + leadtime).strftime('%d') }}"
           cycle_hour: !int "{{ (cycle + leadtime).strftime('%H') }}"
           cycle_mon: !int "{{ (cycle + leadtime).strftime('%m') }}"
-          data_dir_input_grid: "{{ user.uw_training }}/input_data/gfs"
+          data_dir_input_grid: "{{ platform.input_data }}/gfs"
           external_model: "GFS"
           fix_dir_target_grid: "{{ platform.fix_lam }}"
           grib2_file_input_grid: GFS-{{ timevars.yyyymmdd }}-{{ timevars.hh }}-f{{ timevars.fff }}.grib2

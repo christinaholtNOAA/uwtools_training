@@ -1,7 +1,7 @@
 user:
   rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
   uw_training: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training
-  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt2
+  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt4
   cycle_freq: !timedelta 1
 timevars:
   pyyyymmddhh: '{{ (cycle - user.cycle_freq).strftime("%Y%m%d%H") }}'
@@ -15,9 +15,9 @@ forecast:
   fv3:
     rundir: "{{ user.expt_dir }}/{{ timevars.pyyyymmddhh }}/fcst"
 platform:
-  gsi_fixdir: '{{ user.uw_training }}/FIX_RRFS/gsi'
+  gsi_fixdir: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/gsi
   crtm_fixdir: /contrib/spack-stack/spack-stack-1.6.0/envs/unified-env-rocky8/install/intel/2021.5.0/crtm-fix-2.4.0.1_emc-zvwtu3t/fix
-  obspath: '{{ user.uw_training }}/input_data/rap_obs'
+  obspath: /scratch3/BMC/wrfruc/cholt/rrfs_work/input_data/rap_obs
 gsi:
   foo: bar
 analysis:
@@ -36,7 +36,7 @@ analysis:
       stacksize: 300M
       threads: 1
     coupler.res:
-      template_file: '{{ user.uw_training }}/FIX_RRFS/gsi/RRFS_CONUS_13km/fv3_coupler.res'
+      template_file: '{{ platform.gsi_fixdir }}/RRFS_CONUS_13km/fv3_coupler.res'
       template_values:
         yyyy: "{{ timevars.yyyy }}"
         mm: "{{ timevars.mm }}"
@@ -90,7 +90,7 @@ analysis:
       abibufr: "{{ platform.obspath }}/{{ timevars.yyyymmddhh }}.rap.t{{ timevars.hh }}z.gsrcsr.tm00.bufr_d"
       ssmisbufr: "{{ platform.obspath }}/{{ timevars.yyyymmddhh }}.rap.t{{ timevars.hh }}z.ssmisu.tm00.bufr_d"
     namelist:
-      base_file: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training/parm/gsiparm.anl
+      base_file: "{{ user.uw_training }}/parm/gsiparm.anl"
     obs_input_file: "{{ user.uw_training }}/parm/obs_input.txt"
     rundir: "{{ user.expt_dir }}/{{ timevars.yyyymmddhh }}/analysis"
   platform:
