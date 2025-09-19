@@ -1,0 +1,6 @@
+const:
+  nx: 1440
+  ny: 721
+var:
+  nlev: 127
+  points: '{{ const.nx * const.ny * nlev }}'

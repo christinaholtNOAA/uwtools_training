@@ -1,0 +1,2 @@
+model_name: FV3
+variable_name: '{{ model_name | lower }}'

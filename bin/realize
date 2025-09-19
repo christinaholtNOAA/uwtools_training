@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-config=../configs/$1
+config=../configs/$1.yaml
 shift
 echo -e "$(basename $config):\n"
 cat $config

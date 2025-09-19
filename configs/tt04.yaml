@@ -1,0 +1,1 @@
+leadtimes: '{% for n in range(6, 25, 6) %}{{ "%03d" % n }},{% endfor %}'
