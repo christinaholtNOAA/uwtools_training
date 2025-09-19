@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+config=../configs/$1.yaml
+shift
+action=$1
+shift
+echo -e "$(basename $config):\n"
+cat $config
+echo
+set -x
+uw fs $action -c $config $@
