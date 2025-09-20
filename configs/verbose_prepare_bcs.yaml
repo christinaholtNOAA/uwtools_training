@@ -1,0 +1,94 @@
+make_ics:
+  chgres_cube:
+    execution:
+      batchargs:
+        nodes: 1
+        tasks_per_node: 20
+        walltime: 00:30:00
+      envcmds:
+      - module use /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/modulefiles
+      - module load build_hera_intel
+      executable: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/exec/chgres_cube
+      mpiargs:
+      - --export=ALL
+      mpicmd: srun
+    namelist:
+      update_values:
+        config:
+          convert_atm: true
+          convert_nst: false
+          convert_sfc: true
+          cycle_day: !int "{{ (cycle + leadtime).strftime('%d') }}"
+          cycle_hour: !int "{{ (cycle + leadtime).strftime('%H') }}"
+          cycle_mon: !int "{{ (cycle + leadtime).strftime('%m') }}"
+          data_dir_input_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/input_data/gfs
+          external_model: GFS
+          fix_dir_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV
+          grib2_file_input_grid: GFS-{{ cycle.strftime("%Y%m%d") }}-{{ cycle.strftime("%H") }}-f{{ "%03d" % (leadtime.total_seconds() / 3600) }}.grib2
+          halo_blend: 20
+          halo_bndy: 4
+          input_type: grib2
+          lai_from_climo: true
+          minmax_vgfrc_from_climo: true
+          mosaic_file_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV/C775_mosaic.halo4.nc
+          nsoill_out: 4
+          orog_dir_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV
+          orog_files_target_grid: C775_oro_data.tile7.halo4.nc
+          regional: 1
+          sotyp_from_climo: true
+          tg3_from_soil: false
+          varmap_file: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/sorc/UFS_UTILS/parm/varmap_tables/GFSphys_var_map.txt
+          vcoord_file_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/am/global_hyblev_fcst_rrfsL65.txt
+          vgfrc_from_climo: true
+          vgtyp_from_climo: true
+    rundir: /scratch4/BMC/wrfruc/elcarpenter/uwtools_training/rundir/{{ cycle.strftime("%Y%m%d%H") }}/ics
+  platform:
+    account: wrfruc
+    scheduler: slurm
+make_lbcs:
+  chgres_cube:
+    execution:
+      batchargs:
+        nodes: 1
+        tasks_per_node: 20
+        walltime: 00:30:00
+      envcmds:
+      - module use /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/modulefiles
+      - module load build_hera_intel
+      executable: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/exec/chgres_cube
+      mpiargs:
+      - --export=ALL
+      mpicmd: srun
+    namelist:
+      update_values:
+        config:
+          convert_atm: true
+          convert_nst: false
+          convert_sfc: true
+          cycle_day: !int "{{ (cycle + leadtime).strftime('%d') }}"
+          cycle_hour: !int "{{ (cycle + leadtime).strftime('%H') }}"
+          cycle_mon: !int "{{ (cycle + leadtime).strftime('%m') }}"
+          data_dir_input_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/input_data/gfs
+          external_model: GFS
+          fix_dir_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV
+          grib2_file_input_grid: GFS-{{ cycle.strftime("%Y%m%d") }}-{{ cycle.strftime("%H") }}-f{{ "%03d" % (leadtime.total_seconds() / 3600) }}.grib2
+          halo_blend: 20
+          halo_bndy: 4
+          input_type: grib2
+          lai_from_climo: true
+          minmax_vgfrc_from_climo: true
+          mosaic_file_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV/C775_mosaic.halo4.nc
+          nsoill_out: 4
+          orog_dir_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/lam/RRFS_CONUS_13km_Lake_fracSV
+          orog_files_target_grid: C775_oro_data.tile7.halo4.nc
+          regional: 2
+          sotyp_from_climo: true
+          tg3_from_soil: false
+          varmap_file: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow/sorc/UFS_UTILS/parm/varmap_tables/GFSphys_var_map.txt
+          vcoord_file_target_grid: /scratch3/BMC/wrfruc/cholt/rrfs_work/FIX_RRFS/am/global_hyblev_fcst_rrfsL65.txt
+          vgfrc_from_climo: true
+          vgtyp_from_climo: true
+    rundir: /scratch4/BMC/wrfruc/elcarpenter/uwtools_training/rundir/{{ cycle.strftime("%Y%m%d%H") }}/lbcs/{{ cycle.strftime("%Y%m%d%H") }}_{{ "%03d" % (leadtime.total_seconds() / 3600) }}
+  platform:
+    account: wrfruc
+    scheduler: slurm
