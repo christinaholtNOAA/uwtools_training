@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+config=$1.yaml
+shift
+echo -e "$config:\n"
+cat $config
+echo
+set -x
+uw config realize -i $config $@

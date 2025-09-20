@@ -1,0 +1,5 @@
+nlev: 127
+nx: 1440
+ny: 721
+points: !int '{{ nx * ny * nlev }}'
+leadtimes: !list '[{% for n in range(6, 25, 6) %}{{ n }},{% endfor %}]'

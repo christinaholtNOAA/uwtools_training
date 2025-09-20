@@ -1,0 +1,8 @@
+defaults: &defaults
+  10m_u_component_of_wind:
+    level_type: heightAboveGround
+    name: u_10m
+gfs:
+  <<: *defaults
+  10m_u_component_of_wind:
+    name: UGRD
