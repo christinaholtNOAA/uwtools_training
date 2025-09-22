@@ -1,0 +1,9 @@
+a:
+  pi: 3.14
+b:
+  foo:
+    pi: !float "{{ a.pi }}"
+  bar:
+    one: 1
+    two: !int "{{ b.bar.one + 1 }}"
+date: "{{ cycle }}"
