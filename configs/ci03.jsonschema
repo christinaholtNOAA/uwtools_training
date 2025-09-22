@@ -6,7 +6,6 @@
       "additionalProperties": false,
       "properties": {
         "one": {
-          "minval": "1",
           "type": "integer"
         },
         "three": {
