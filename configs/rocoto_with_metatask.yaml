@@ -44,4 +44,3 @@ workflow:
             value: '&LOGDIR;/{{ jobname }}_@Y@m@d@H.log'
         nodes: "{{ make_lbcs.chgres_cube.execution.batchargs.nodes }}:ppn={{ make_lbcs.chgres_cube.execution.batchargs.tasks_per_node }}"
         walltime: "{{ make_lbcs.chgres_cube.execution.batchargs.walltime }}"
-
