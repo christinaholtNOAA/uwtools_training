@@ -1,6 +1,6 @@
 user:
-  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt4
-  uw_training: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training
+  expt_dir: /scratch4/BMC/wrfruc/elcarpenter/uwtools_training/rundir
+  uw_training: /scratch4/BMC/wrfruc/elcarpenter/uwtools_training
   rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
 timevars:
   yyyymmddhh: '{{ cycle.strftime("%Y%m%d%H") }}'
@@ -19,7 +19,7 @@ make_ics:
       batchargs:
         nodes: 1
         tasks_per_node: 20
-        walltime: 00:30:00
+        walltime: 00:03:00
       envcmds:
         - module use {{ user.rrfs_workflow }}/modulefiles
         - module load build_hera_intel
