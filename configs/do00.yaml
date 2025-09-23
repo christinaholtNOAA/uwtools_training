@@ -1,0 +1,23 @@
+data:
+  '{{ val.gfs }}': https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.{{ val.yyyymmdd }}/{{ val.hh }}/atmos/gfs.t{{ val.hh }}z.pgrb2.0p25.f000
+platform:
+  account: wrfruc
+  scheduler: slurm
+ungrib:
+  execution:
+    batchargs:
+      cores: 1
+      walltime: "00:01:00"
+    executable: '{{ "CONDA_PREFIX" | env }}/bin/ungrib'
+  gribfiles:
+    - '{{ val.gfs }}'
+  rundir: '{{ val.rundir }}'
+  start: '{{ cycle }}'
+  step: 1
+  stop: '{{ cycle }}'
+  vtable: '{{ "WPSFILES" | env }}/Vtable.GFS'
+val:
+  gfs: '{{ val.rundir }}/anl.grib2'
+  hh: '{{ cycle.strftime("%H") }}'
+  rundir: '{{ "PWD" | env }}/driver-overview'
+  yyyymmdd: '{{ cycle.strftime("%Y%m%d") }}'

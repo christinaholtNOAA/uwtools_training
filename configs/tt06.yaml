@@ -1,5 +1,7 @@
-nlev: 127
-nx: 1440
-ny: 721
-points: !int '{{ nx * ny * nlev }}'
-leadtimes: !list '[{% for n in range(6, 25, 6) %}{{ n }},{% endfor %}]'
+const:
+  nx: 1440
+  ny: 721
+var:
+  nlev: 127
+  points: !int '{{ const.nx * const.ny * nlev }}'
+leadtimes: !list '[{% for n in range(6, 25, 6) %}"{{ "%03d" % n }}",{% endfor %}]'
