@@ -1,7 +1,7 @@
 user:
   rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
-  uw_training: /scratch3/BMC/wrfruc/cholt/uw_training_prep/uw_training
-  expt_dir: /scratch3/BMC/wrfruc/cholt/uw_training_prep/expt4
+  uw_training: /scratch3/BMC/wrfruc/uw_training/uwtools_training
+  expt_dir: /scratch3/BMC/wrfruc/uw_training/expt_dir
   cycle_freq: !timedelta 1
 timevars:
   pyyyymmddhh: '{{ (cycle - user.cycle_freq).strftime("%Y%m%d%H") }}'

@@ -1,0 +1,10 @@
+name: uwtools-training
+channels:
+  - ufs-community
+  - paul.madden
+  - conda-forge
+  - nodefaults
+dependencies:
+  - jupyter
+  - ungrib
+  - uwtools=2.10.*

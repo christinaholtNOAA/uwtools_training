@@ -1,6 +1,6 @@
 user:
-  expt_dir: /scratch4/BMC/wrfruc/elcarpenter/uwtools_training/rundir
-  uw_training: /scratch4/BMC/wrfruc/elcarpenter/uwtools_training
+  expt_dir: /scratch3/BMC/wrfruc/uw_training/expt_dir
+  uw_training: /scratch3/BMC/wrfruc/uw_training/uwtools_training
   rrfs_workflow: /scratch3/BMC/wrfruc/cholt/rrfs_work/rrfs-workflow
 timevars:
   yyyymmddhh: '{{ cycle.strftime("%Y%m%d%H") }}'
